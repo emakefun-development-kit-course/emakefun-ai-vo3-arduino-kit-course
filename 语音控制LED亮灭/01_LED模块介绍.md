@@ -30,7 +30,7 @@
 
 ![size_mark](picture/size_mark.png)
 
-  <a href="./resource/led_structure.zip" download>下载LED模块2D和3D设计文件</a>  
+  LED模块2D和3D设计文件：./resource/led_structure.zip
 
 ## Arduino IDE点灯示例程序
 

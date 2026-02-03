@@ -2,7 +2,7 @@
 
 此文档旨在介绍Arduino IDE2.0的安装教程及AI-VOX3主板在Arduino IDE2.0平台的使用方法。
 
-请点击 [ArduinoIDE下载链接](https://downloads.arduino.cc/arduino-ide/arduino-ide_2.3.7_Windows_64bit.msi) 下载最新IDE2.0版本并安装。
+请点击 [ArduinoIDE下载链接](https://downloads.arduino.cc/arduino-ide/arduino-ide_2.3.7_Windows_64bit.msi) 下载最新IDE2.0版本并安装（链接提供的为Windows平台64位的2.3.7版本安装包）。
 
 > **注意：** 安装路径中不能有中文，否则会有一些奇怪的问题。
 
@@ -28,7 +28,7 @@
 * Partition Scheme：Custom
 * PSRAM：OPI PSRAM
 
-1. 下载AI-VOX-Engine库的最新版本，链接：[AI VOX Engine 库下载和版本说明](https://dcnmu33qx4fc.feishu.cn/docx/OvkBd63NUor3sKx1271cHxjPnsL) 。菜单栏点击【项目】->【导入库】->【添加.ZIP库】，在弹出的窗口中找到下载好的ai_vox-x.x.x.zip -> 点击打开 -> 等待安装完成
+1. 下载AI-VOX-Engine库的**最新版本**，链接：[AI VOX Engine 库下载和版本说明](https://dcnmu33qx4fc.feishu.cn/docx/OvkBd63NUor3sKx1271cHxjPnsL) 。菜单栏点击【项目】->【导入库】->【添加.ZIP库】，在弹出的窗口中找到下载好的ai_vox-x.x.x.zip -> 点击打开 -> 等待安装完成
 
 ![install_ai_vox_engine_lib](picture/install_ai_vox_engine_lib.png)
 

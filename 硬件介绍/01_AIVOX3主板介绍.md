@@ -49,4 +49,4 @@ AI-VOX3是AI VOX Board的升级款，是一款专为AI语音交互应用设计�
 
 ## 6. 原理图
 
-[AI-VOX3原理图](resource/AI-VOX3.pdf)
+AI-VOX3原理图：./resource/AI-VOX3.pdf

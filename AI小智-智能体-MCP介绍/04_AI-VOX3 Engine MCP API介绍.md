@@ -2,7 +2,7 @@
 
 ## 概述
 
-本指南说明如何在 `main.cpp` 中轻松添加自定义的 MCP（Model Context Protocol）工具，让 AI 引擎能够调用您自己的函数控制设备、读取传感器数据等。
+本指南说明如何在AI VOX Engine库的 `main.cpp` 中轻松添加自定义的 MCP（Model Context Protocol）工具，让 AI 引擎能够调用您自己的工具函数控制设备、读取传感器数据等。
 
 ---
 

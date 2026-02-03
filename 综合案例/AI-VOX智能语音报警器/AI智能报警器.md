@@ -29,7 +29,7 @@
 > **注意：** 请修改wifi_config.h中的wifi_ssid和wifi_password，以连接WiFi。
 >
 
-下载上面的示例程序包并解压zip包，打开目录，点击 `ai_vox3_alarm_distance.ino` 文件，即可在 Arduino IDE 中打开示例程序。
+打开上面路径的示例程序包并解压zip包（请放在非中文路径下），打开目录，点击 `ai_vox3_alarm_distance.ino` 文件，即可在 Arduino IDE 中打开示例程序。
 
 ![alt text](picture/folder.png)
 
