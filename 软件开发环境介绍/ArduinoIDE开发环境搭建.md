@@ -39,6 +39,7 @@
 ![alt text](picture/open_library_addr.png)
 
 复制路径后，打开文件管理器，进入该路径，找到libraries文件夹，删除AI_VOX文件夹即可。
+
 ![delete_ai_vox_lib](picture/delete_ai_vox_lib.png)
 
 1. 将写好程序点击上传按钮，等待程序上传成功，如下图。

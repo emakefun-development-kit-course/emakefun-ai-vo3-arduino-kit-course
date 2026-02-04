@@ -105,9 +105,6 @@ void mcp_tool_led_off()
         ai_vox::Engine::GetInstance().SendMcpCallResponse(ev.id, true); });
 }
 
-// ==============================================================================================================
-
-
 // ========== Setup 和 Loop ==========
 void setup()
 {
