@@ -24,6 +24,8 @@
 
 **Arduino 示例程序：./resource/ai_vox3_alarm_distance.zip**
 
+**图形化编程示例：./resource/aily_ai_vox3_alarm_distance.zip**
+
 > ⚠️**重要提示！**
 >
 > **注意：** 请修改wifi_config.h中的wifi_ssid和wifi_password，以连接WiFi。
@@ -37,6 +39,19 @@
 
 将有源蜂鸣器模块连接到AI-VOX3扩展板的IO3引脚，请使用3pin的 PH2.0 连接线，直插式连接，确保连接正确无误。
 将US04超声波测距模块连接到AI-VOX3扩展板的IO1和IO2引脚，使用4pin的 PH2.0 连接线，确保连接正确无误。
+
+| 有源蜂鸣器模块引脚 | AI-VOX3扩展板引脚 |
+| ------------------ | ------------------ |
+| G | G |
+| V | 3V3 |
+| S | 4 |
+
+| US04模块引脚 | AI-VOX3扩展板引脚 |
+| --- | --- |
+| G | G |
+| V | 5V |
+| ECHO | 1 |
+| TRIC | 2 |
 
 <img src="picture/live_short.png" alt="alt text" width="800">
 
