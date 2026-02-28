@@ -89,6 +89,10 @@ AI-VOX3作为通用智能语音助手是一款集成先进语音识别和AI对�
 ![进入知识库图](picture/knowledge_add.png)
 ![进入知识库图](picture/add_knowledge_success.png)
 
+## 安装库
+在Arduino IDE中，安装以下库：
+- ArduinoJson by Benoit Blanchon
+
 ## 软件设计
 
 提供 **串口输出** MCP工具，给到小智AI进行调用，AI识别到控制意图后，AI读取知识库分析后调用MCP工具下发串口输出内容。
