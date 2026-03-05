@@ -54,76 +54,97 @@
 
 ```cpp
 #include <Arduino.h>
+
+#include <cstdint>
+
 #include "ai_vox3_device.h"
 #include "ai_vox_engine.h"
 
+namespace {
+
+// 用户LED引脚定义（连接到开发板的LED）
+constexpr uint8_t kUserLedPin = 1;
+
 // ========== LED 控制 MCP 工具 ==========
 
-// ============================================MCP工具 - LED 开启/关闭============================================
 /**
  * @brief MCP工具 - LED 开启
  *
- * 该函数注册一个名为 "user.led_on" 的MCP工具，用于开启用户LED
+ * 该函数注册一个名为 "user.led_on" 的MCP工具，用于开启用户LED。
+ * 当AI引擎调用此工具时，会将LED引脚设置为高电平点亮LED。
  */
-void mcp_tool_led_on()
-{
-    // 注册工具声明器，定义工具的名称、描述和参数
-    RegisterUserMcpDeclarator([](ai_vox::Engine &engine)
-                              {
-                                  engine.AddMcpTool("user.led_on",  // 工具名称
-                                                    "Turn on user LED", // 工具描述,告诉AI，这个工具是用来打开LED的
-                                                    {}); // 无参数
-                              });
+void RegisterMcpToolLedOn() {
+  // 注册工具声明器，定义工具的名称、描述和参数
+  RegisterUserMcpDeclarator([](ai_vox::Engine& engine) {
+    engine.AddMcpTool("user.led_on", "Turn on user LED", {});  // 无参数
+  });
 
-    // 注册工具处理器，收到调用时，执行打开LED操作（将引脚1设置为高电平）
-    RegisterUserMcpHandler("user.led_on", [](const ai_vox::McpToolCallEvent &ev)
-    {
-        printf("LED on\n");
-        digitalWrite(1, HIGH);
-        ai_vox::Engine::GetInstance().SendMcpCallResponse(ev.id, true); 
-    });
+  // 注册工具处理器，当工具被调用时执行以下操作：
+  // 1. 打印日志信息
+  // 2. 设置LED引脚为高电平（HIGH）以点亮LED
+  // 3. 发送MCP调用响应，表示操作成功
+  RegisterUserMcpHandler("user.led_on", [](const ai_vox::McpToolCallEvent& event) {
+    printf("LED on\n");
+    digitalWrite(kUserLedPin, HIGH);
+    ai_vox::Engine::GetInstance().SendMcpCallResponse(event.id, true);
+  });
 }
 
 /**
  * @brief MCP工具 - LED 关闭
  *
- * 该函数注册一个名为 "user.led_off" 的MCP工具，用于关闭用户LED
+ * 该函数注册一个名为 "user.led_off" 的MCP工具，用于关闭用户LED。
+ * 当AI引擎调用此工具时，会将LED引脚设置为低电平熄灭LED。
  */
-void mcp_tool_led_off()
-{
-    // 注册工具声明器，定义工具的名称、描述和参数
-    RegisterUserMcpDeclarator([](ai_vox::Engine &engine)
-                              {
-                                  engine.AddMcpTool("user.led_off", // 工具名称
-                                                    "Turn off user LED",    // 工具描述,告诉AI，这个工具是用来关闭LED的
-                                                    {}); // 无参数
-                              });
+void RegisterMcpToolLedOff() {
+  // 注册工具声明器，定义工具的名称、描述和参数
+  RegisterUserMcpDeclarator([](ai_vox::Engine& engine) {
+    engine.AddMcpTool("user.led_off", "Turn off user LED", {});  // 无参数
+  });
 
-    // 注册工具处理器，收到调用时，执行关闭LED操作（将引脚1设置为低电平）
-    RegisterUserMcpHandler("user.led_off", [](const ai_vox::McpToolCallEvent &ev)
-                           {
-        printf("LED off\n");
-        digitalWrite(1, LOW);
-        ai_vox::Engine::GetInstance().SendMcpCallResponse(ev.id, true); });
+  // 注册工具处理器，当工具被调用时执行以下操作：
+  // 1. 打印日志信息
+  // 2. 设置LED引脚为低电平（LOW）以熄灭LED
+  // 3. 发送MCP调用响应，表示操作成功
+  RegisterUserMcpHandler("user.led_off", [](const ai_vox::McpToolCallEvent& event) {
+    printf("LED off\n");
+    digitalWrite(kUserLedPin, LOW);
+    ai_vox::Engine::GetInstance().SendMcpCallResponse(event.id, true);
+  });
 }
+
+}  // namespace
 
 // ========== Setup 和 Loop ==========
-void setup()
-{
-    // 初始化 LED 开启工具
-    mcp_tool_led_on();
 
-    // 初始化 LED 关闭工具
-    mcp_tool_led_off();
+/**
+ * @brief Arduino setup函数
+ *
+ * 在设备上电或复位后调用一次，用于初始化所有硬件和软件组件。
+ * 初始化顺序：
+ * 1. 注册MCP工具（LED开关控制）
+ * 2. 初始化设备服务（包括I2C、LED、显示屏、音频、按钮、WiFi等）
+ */
+void setup() {
+  // 注册LED开启工具
+  RegisterMcpToolLedOn();
 
-    // 初始化设备服务，包括硬件和AI引擎，必备步骤
-    InitializeDevice();
+  // 注册LED关闭工具
+  RegisterMcpToolLedOff();
+
+  // 初始化设备服务
+  InitializeDevice();
 }
 
-void loop()
-{
-    // 处理设备服务主循环事件， 必备步骤
-    ProcessMainLoop();
+/**
+ * @brief Arduino主循环函数
+ *
+ * 在setup()之后持续循环调用，用于处理设备的主循环事件。
+ * 包括处理观察者事件、MCP工具调用、显示屏更新等。
+ */
+void loop() {
+  // 处理设备服务主循环事件
+  ProcessMainLoop();
 }
 
 ```

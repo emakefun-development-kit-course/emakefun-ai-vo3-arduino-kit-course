@@ -54,93 +54,91 @@
 ## 源码展示
 
 ```cpp
+/**
+ * @file main.cpp
+ * @brief AI VOX3 DHT11温湿度传感器示例
+ *
+ * 本示例展示如何使用AI VOX3框架读取DHT11温湿度传感器的数据
+ */
+
 #include <Arduino.h>
-#include "ai_vox3_device.h"
-#include "ai_vox_engine.h"
-#include <ArduinoJson.h> 
+#include <ArduinoJson.h>
 
 #include "DHT.h"
+#include "ai_vox3_device.h"
+#include "ai_vox_engine.h"
 
-// 定义引脚和传感器类型
-#define DHTPIN  4     // DHT11 连接的 GPIO 引脚
-#define DHTTYPE DHT11 // 指定传感器类型为 DHT11
+namespace {
 
-// 初始化传感器
-DHT dht(DHTPIN, DHTTYPE);
+/**
+ * @brief 硬件配置
+ * @note DHT11传感器连接GPIO4
+ */
+constexpr uint8_t kDhtPin = 4;
+constexpr uint8_t kDhtType = DHT11;
 
-// ============================================MCP工具 - 读取温湿度============================================
+DHT dht(kDhtPin, kDhtType);
 
 /**
  * @brief MCP工具 - 读取温湿度数据
  *
- * 该函数注册一个名为 "user.read_temperature_humidity" 的MCP工具，用于读取DHT11传感器的温度和湿度数据
+ * 注册一个名为"user.read_temperature_humidity"的MCP工具
+ * 用于获取DHT11传感器的温度和湿度数据
+ *
+ * 返回值说明:
+ *   - temperature: 温度值（摄氏度）
+ *   - humidity: 湿度值（百分比）
+ *   - feels_like_temperature: 体感温度
  */
-void mcp_tool_read_temperature_humidity()
-{
-    // 注册工具声明器，定义工具的名称和描述
-    RegisterUserMcpDeclarator([](ai_vox::Engine &engine)
-    { 
-        engine.AddMcpTool("user.read_temperature_humidity",          // 工具名称
-                          "Read temperature and humidity from DHT11 sensor",  // 工具描述
-                        {}); // 无参数
-    });
+void RegisterMcpToolReadTemperatureHumidity() {
+  RegisterUserMcpDeclarator(
+      [](ai_vox::Engine& engine) { engine.AddMcpTool("user.read_temperature_humidity", "Read temperature and humidity from DHT11 sensor", {}); });
 
-    // 注册工具处理器，收到调用时，读取温湿度数据
-    RegisterUserMcpHandler("user.read_temperature_humidity", [](const ai_vox::McpToolCallEvent &ev)
-                           {
-        // 读取湿度
-        float humidity = dht.readHumidity();
-        // 读取温度 (摄氏度)
-        float temperature = dht.readTemperature();
+  RegisterUserMcpHandler("user.read_temperature_humidity", [](const ai_vox::McpToolCallEvent& event) {
+    const float humidity = dht.readHumidity();
+    const float temperature = dht.readTemperature();
 
-        printf("====temp:%d hum:%d\n", temperature, humidity);
+    printf("====temp:%d hum:%d\n", static_cast<int32_t>(temperature), static_cast<int32_t>(humidity));
 
-        // 检查读取是否成功
-        if (isnan(humidity) || isnan(temperature)) {
-            Serial.println(F("无法从 DHT 传感器读取数据，请检查接线!"));
-            ai_vox::Engine::GetInstance().SendMcpCallError(ev.id, "Failed to read from DHT sensor");
-            return;
-        }
+    if (isnan(humidity) || isnan(temperature)) {
+      Serial.println(F("无法从 DHT 传感器读取数据，请检查接线!"));
+      ai_vox::Engine::GetInstance().SendMcpCallError(event.id, "Failed to read from DHT sensor");
+      return;
+    }
 
-        // 计算体感温度 (Heat Index)
-        float hic = dht.computeHeatIndex(temperature, humidity, false);
+    const float heat_index = dht.computeHeatIndex(temperature, humidity, false);
 
-        // 创建 ArduinoJson 文档
-        DynamicJsonDocument doc(256); // 分配足够内存存储温湿度数据
-        doc["temperature"] = temperature;
-        doc["humidity"] = humidity;
-        doc["feels_like_temperature"] = hic;
+    DynamicJsonDocument doc(256);
+    doc["temperature"] = temperature;
+    doc["humidity"] = humidity;
+    doc["feels_like_temperature"] = heat_index;
 
-        // 将 JSON 文档转换为字符串
-        String jsonString;
-        serializeJson(doc, jsonString);
+    String json_string;
+    serializeJson(doc, json_string);
 
-        // 发送响应
-        ai_vox::Engine::GetInstance().SendMcpCallResponse(ev.id, jsonString.c_str()); 
-    });
+    ai_vox::Engine::GetInstance().SendMcpCallResponse(event.id, json_string.c_str());
+  });
 }
 
-// ========== Setup 和 Loop ==========
-void setup()
-{
-    Serial.begin(115200);
+}  // namespace
 
-    // 启动传感器
-    dht.begin(); 
+/**
+ * @brief Arduino setup函数
+ */
+void setup() {
+  Serial.begin(115200);
+  dht.begin();
 
-    // 注册MCP工具 - 读取温湿度
-    mcp_tool_read_temperature_humidity();
-
-    // 初始化设备服务，包括硬件和AI引擎，必备步骤
-    InitializeDevice();
+  RegisterMcpToolReadTemperatureHumidity();
+  InitializeDevice();
 }
 
-void loop()
-{
-    // 处理设备服务主循环事件， 必备步骤
-    ProcessMainLoop();
+/**
+ * @brief Arduino主循环函数
+ */
+void loop() {
+  ProcessMainLoop();
 }
-
 ```
 
 ## 语音交互使用流程
